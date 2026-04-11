@@ -1,17 +1,10 @@
 # ============================
-# Stage 1: Install Dependencies
+# Stage 1: Build the Application
 # ============================
-FROM node:18-slim AS deps
+FROM node:20-slim AS builder
 WORKDIR /app
 COPY package.json ./
 RUN npm install
-
-# ============================
-# Stage 2: Build the Application
-# ============================
-FROM node:18-slim AS builder
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 # Set build-time environment variables
@@ -20,9 +13,9 @@ ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
 
 # ============================
-# Stage 3: Production Runner
+# Stage 2: Production Runner
 # ============================
-FROM node:18-slim AS runner
+FROM node:20-slim AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
