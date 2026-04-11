@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import ShopContent from '../../components/ShopContent';
@@ -13,7 +14,7 @@ const products = [
   { id: 8, name: 'Timeless Bond Rings', price: '₨ 30,000', description: 'Matching rings that symbolize an everlasting connection.', image: '/r2.png' },
   { id: 9, name: 'Eternity Ring', price: '₨ 75,000', description: 'A dazzling ring that captures the essence of eternity with its brilliance.', image: '/r3.png' },
   { id: 10, name: 'Starlight Droplets', price: '₨ 40,000', description: 'Elegant earrings that capture the essence of starlight in a beautiful design.', image: '/e2.png' },
-  { id: 11, name: 'Silver Moon', price: '₨ 5,000', description: 'A modern hoop earring design inspired by the moon’s glow.', image: '/e3.png' },
+  { id: 11, name: 'Silver Moon', price: '₨ 5,000', description: 'A modern hoop earring design inspired by the moon's glow.', image: '/e3.png' },
   { id: 12, name: 'Whispering Pearl', price: '₨ 12,000', description: 'Elegant pearl earrings that add a whisper of sophistication to any look.', image: '/e4.png' },
 ];
 
@@ -21,8 +22,10 @@ export default function Shop() {
   return (
     <>
       <Header />
-      <ShopContent products={products} />
+      <Suspense fallback={<div>Loading...</div>}>
+        <ShopContent products={products} />
+      </Suspense>
       <Footer />
     </>
   );
-}
+}
