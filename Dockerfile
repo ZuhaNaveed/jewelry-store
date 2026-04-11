@@ -1,7 +1,7 @@
 # ============================
 # Stage 1: Install Dependencies
 # ============================
-FROM node:18-alpine AS deps
+FROM node:18-slim AS deps
 WORKDIR /app
 COPY package.json ./
 RUN npm install
@@ -9,7 +9,7 @@ RUN npm install
 # ============================
 # Stage 2: Build the Application
 # ============================
-FROM node:18-alpine AS builder
+FROM node:18-slim AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
@@ -22,7 +22,7 @@ RUN npm run build
 # ============================
 # Stage 3: Production Runner
 # ============================
-FROM node:18-alpine AS runner
+FROM node:18-slim AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
