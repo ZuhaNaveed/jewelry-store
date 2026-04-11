@@ -20,7 +20,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: yourdockerhubusername/jewelry-store:latest
+    image: zuhanaveed/jewelry-store:latest
     container_name: jewelry-app
     restart: always
     ports:

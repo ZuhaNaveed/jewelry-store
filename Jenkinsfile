@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_HUB_USER = 'yourdockerhubusername'
+        DOCKER_HUB_USER = 'zuhanaveed'
         IMAGE_NAME      = 'jewelry-store'
     }
 
