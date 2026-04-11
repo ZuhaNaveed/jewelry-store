@@ -1,0 +1,56 @@
+services:
+  # ============================
+  # MongoDB Database Service (Jenkins)
+  # ============================
+  mongo:
+    image: mongo:7
+    container_name: jewelry-mongo-jenkins
+    restart: always
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo-data-jenkins:/data/db
+    networks:
+      - jewelry-net-jenkins
+
+  # ============================
+  # Next.js Application (Jenkins)
+  # Uses volume-mounted code instead of Dockerfile
+  # ============================
+  app:
+    image: node:18-alpine
+    container_name: jewelry-app-jenkins
+    working_dir: /app
+    restart: always
+    ports:
+      - "3001:3000"
+    volumes:
+      - .:/app
+      - node_modules_jenkins:/app/node_modules
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/jewelry-store
+      - JWT_SECRET=mySuperSecretKey123!@#
+      - ADMIN_EMAIL=admin@jewelry.com
+      - ADMIN_PASSWORD=admin123
+      - HOSTNAME=0.0.0.0
+    command: sh -c "npm install && npm run build && npm start"
+    depends_on:
+      - mongo
+    networks:
+      - jewelry-net-jenkins
+
+# ============================
+# Persistent Volumes
+# ============================
+volumes:
+  mongo-data-jenkins:
+    driver: local
+  node_modules_jenkins:
+    driver: local
+
+# ============================
+# Custom Network
+# ============================
+networks:
+  jewelry-net-jenkins:
+    driver: bridge
