@@ -18,22 +18,19 @@ services:
   # Uses volume-mounted code instead of Dockerfile
   # ============================
   app:
-    image: node:18-alpine
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: zuhanaveed/jewelry-store:jenkins
     container_name: jewelry-app-jenkins
-    working_dir: /app
     restart: always
     ports:
       - "3001:3000"
-    volumes:
-      - .:/app
-      - node_modules_jenkins:/app/node_modules
     environment:
-      - MONGO_URI=mongodb://mongo:27017/jewelry-store
+      - MONGO_URI=mongodb://mongo:27017/jewelry-store-jenkins
       - JWT_SECRET=mySuperSecretKey123!@#
       - ADMIN_EMAIL=admin@jewelry.com
       - ADMIN_PASSWORD=admin123
-      - HOSTNAME=0.0.0.0
-    command: sh -c "npm install && npm run build && npm start"
     depends_on:
       - mongo
     networks:
@@ -44,8 +41,6 @@ services:
 # ============================
 volumes:
   mongo-data-jenkins:
-    driver: local
-  node_modules_jenkins:
     driver: local
 
 # ============================
