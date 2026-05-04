@@ -148,16 +148,20 @@ pipeline {
                     from: 'zuhanaveed32@gmail.com',
                     replyTo: 'zuhanaveed32@gmail.com'
                 )
+
+                // Always shut down containers after pipeline completes
+                // This ensures deployment is DOWN after each run (as required by assignment)
+                sh '''
+                    echo "=== Shutting down containers (deployment returns to DOWN state) ==="
+                    docker compose -f docker-compose.jenkins.yml down || true
+                '''
             }
         }
         failure {
-            sh '''
-                echo "=== Build failed, cleaning up containers ==="
-                docker compose -f docker-compose.jenkins.yml down || true
-            '''
+            echo 'Pipeline failed. Containers have been shut down.'
         }
         success {
-            echo 'Pipeline executed successfully! Application is running on port 3001.'
+            echo 'Pipeline executed successfully! Tests passed. Containers shut down.'
         }
     }
 }
