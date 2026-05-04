@@ -12,3 +12,7 @@ out
 # OS files
 .DS_Store
 Thumbs.db
+
+# Maven build output (compiled classes, test reports)
+selenium-tests/target/
+target/
