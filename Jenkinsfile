@@ -19,11 +19,12 @@ pipeline {
 
                 script {
                     // Capture the email of whoever made the push
-                    env.GIT_AUTHOR_EMAIL = sh(
-                        script: "git log -1 --pretty=format:'%ae'",
+                    def gitEmail = sh(
+                        script: 'git log -1 --format=%ae 2>/dev/null || echo ""',
                         returnStdout: true
-                    ).trim().replaceAll("'", "")
-                    echo "=== Push triggered by: ${env.GIT_AUTHOR_EMAIL} ==="
+                    ).trim()
+                    env.PUSHER_EMAIL = gitEmail ? gitEmail : 'zuhanaveed32@gmail.com'
+                    echo "=== Push triggered by: ${env.PUSHER_EMAIL} ==="
                 }
             }
         }
@@ -96,7 +97,7 @@ pipeline {
         always {
             script {
                 def buildStatus = currentBuild.result ?: 'SUCCESS'
-                def recipientEmail = env.GIT_AUTHOR_EMAIL ?: 'zuhaaiman243@gmail.com'
+                def recipientEmail = env.PUSHER_EMAIL ?: 'zuhanaveed32@gmail.com'
 
                 emailext (
                     subject: "Jenkins [${buildStatus}] - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
